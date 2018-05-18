@@ -1,11 +1,20 @@
 const Message = `
   type Message {
+    # message type
     type: String
+    # user info
     user: User
+    # message in plain text
     text: String
+    # timestamp in unix epoch
     ts: String
+    # relative time
+    time: String
+    # reactions list
     reactions: [Reaction]
+    # thread
     thread: Thread
+    parent_user_id: String
   }
 
   type Reaction {

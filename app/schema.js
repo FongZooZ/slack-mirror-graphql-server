@@ -1,10 +1,11 @@
 const { makeExecutableSchema } = require('graphql-tools')
 
-const schema = require('./schemas')
+const schemas = require('./schemas')
+const resolvers = require('./resolvers')
 
 const RootQuery = `
   type RootQuery {
-    message(count: Int, page: Int): Message
+    message(limit: Int, page: Int): [Message]
   }
 `
 
@@ -16,7 +17,7 @@ const SchemaDefinition = `
 
 module.exports = makeExecutableSchema({
   typeDefs: [
-    SchemaDefinition, RootQuery, ...schema
+    SchemaDefinition, RootQuery, ...schemas
   ],
-  resolvers: {}
+  resolvers
 })

@@ -28,4 +28,4 @@ const MessageSchema = new Schema({
 MessageSchema.index({ user: 1, ts: 1 })
 MessageSchema.index({ ts: -1 })
 
-module.exports = mongoose.model('Message', MessageSchema, 'Message')
+module.exports = mongoose.model('Message', MessageSchema)
