@@ -20,11 +20,11 @@ module.exports = {
           email: userInfo.profile.email,
           avatars: [{
             image_24: userInfo.profile.image_24,
-            image_32: userInfo.profile.image_24,
-            image_48: userInfo.profile.image_24,
-            image_72: userInfo.profile.image_24,
-            image_192: userInfo.profile.image_24,
-            image_512: userInfo.profile.image_24,
+            image_32: userInfo.profile.image_32,
+            image_48: userInfo.profile.image_48,
+            image_72: userInfo.profile.image_72,
+            image_192: userInfo.profile.image_192,
+            image_512: userInfo.profile.image_512
           }]
         }
       }
@@ -44,6 +44,30 @@ module.exports = {
       const data = {
         ts: thread_ts,
         messages
+      }
+
+      return data
+    }
+  },
+  Thread: {
+    time: ({ts}) => {
+      return moment.unix(ts).fromNow()
+    }
+  },
+  ThreadMessage: {
+    user: async ({user}) => {
+      const userInfo = await User.findOne({id: user})
+
+      let data
+      if (!userInfo) {
+        data = null
+      } else {
+        data = {
+          id: userInfo.id,
+          name: userInfo.real_name,
+          real_name: userInfo.real_name,
+          email: userInfo.profile.email
+        }
       }
 
       return data

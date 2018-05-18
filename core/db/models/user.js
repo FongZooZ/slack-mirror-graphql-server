@@ -39,4 +39,6 @@ const UserSchema = new Schema({
   has_2fa: Boolean
 })
 
+UserSchema.index({ id: 1 })
+
 module.exports = mongoose.model('User', UserSchema)

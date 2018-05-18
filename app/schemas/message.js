@@ -28,11 +28,13 @@ const Message = `
     user: User
     text: String
     ts: String
+    time: String
     reactions: [Reaction]
   }
 
   type Thread {
     ts: String
+    time: String
     reply_count: Int
     messages: [ThreadMessage]
   }
