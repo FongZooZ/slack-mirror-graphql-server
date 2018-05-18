@@ -22,7 +22,7 @@ connectDb()
 
 const SLACK_URL = 'https://slack.com'
 const GROUP_HISTORY_ENDPOINT = 'api/groups.history'
-const USER_INFO_ENDPOINT = 'api/users.info'
+const USERS_LIST_ENDPOINT = 'api/users.list'
 
 const handleError = msg => {
   console.error(msg)
@@ -33,10 +33,7 @@ const handleError = msg => {
 // - Clear DB
 // - Pagination and get all messages
 const fetchMessages = async (token, channelId, count) => {
-  if (!token || !channelId) {
-    console.error('Invalid input')
-    return process.exit(1)
-  }
+  if (!token || !channelId) return handleError('Invalid input')
 
   const COUNT = 1000
   count = count ? count : COUNT
@@ -68,7 +65,36 @@ const fetchMessages = async (token, channelId, count) => {
   process.exit()
 }
 
-const fetchUsers = () => {
+// TODO:
+// - Clear DB
+// - Pagination and get all messages
+const fetchUsers = async token => {
+  if (!token) return handleError('Invalid input')
+
+  let data
+  try {
+    const options = {
+      method: 'get',
+      url: `${SLACK_URL}/${USERS_LIST_ENDPOINT}`,
+      headers: { Authorization: `Bearer ${token}` }
+    }
+    const response = await axios(options)
+    data = response.data
+  } catch (err) {
+    handleError(err)
+  }
+
+  if (!data.ok) return handleError(data.error)
+  if (!data.members || !Array.isArray(data.members) || !data.members.length) return handleError('No users was found')
+
+  const { members } = data
+
+  for (const member of members) {
+    const user = new User(member)
+    await user.save()
+  }
+  console.log('Done!')
+
   process.exit()
 }
 
