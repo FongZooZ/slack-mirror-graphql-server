@@ -25,7 +25,7 @@ const MessageSchema = new Schema({
   reply_count: Number
 })
 
-MessageSchema.index({ user: 1, ts: 1 })
+MessageSchema.index({ user: 1, ts: 1 }, { unique: true})
 MessageSchema.index({ ts: -1 })
 
 module.exports = mongoose.model('Message', MessageSchema)

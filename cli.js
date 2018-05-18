@@ -65,6 +65,58 @@ const fetchMessages = async (token, channelId, count) => {
   process.exit()
 }
 
+const crawl = async (token, channelId) => {
+  if (!token || !channelId) return handleError('Invalid input')
+
+  await loadMessages({token, channelId})
+}
+
+const loadMessages = async ({lastTimestamp, token, channelId}) => {
+  let url = `${SLACK_URL}/${GROUP_HISTORY_ENDPOINT}?channel=${channelId}&count=1000`
+  if (lastTimestamp) {
+    lastTimestamp = parseFloat(lastTimestamp) - 0.000001
+    url += `&latest=${lastTimestamp}`
+  }
+
+  let data
+  try {
+    const options = {
+      method: 'get',
+      url,
+      headers: { Authorization: `Bearer ${token}` }
+    }
+    const response = await axios(options)
+    data = response.data
+  } catch (err) {
+    handleError(err)
+  }
+
+  if (!data.ok) return handleError(data.error)
+  if (data.messages.length === 1000) {
+    const { messages } = data
+
+    for (const msg of messages) {
+      const message = new Message(msg)
+      await message.save()
+    }
+
+    const lastMessge = messages[messages.length - 1]
+    lastTimestamp = lastMessge.ts
+
+    await loadMessages({lastTimestamp, token, channelId})
+  } else {
+    const { messages } = data
+
+    for (const msg of messages) {
+      const message = new Message(msg)
+      await message.save()
+    }
+
+    console.log('Done!')
+    process.exit()
+  }
+}
+
 const fetchUsers = async token => {
   if (!token) return handleError('Invalid input')
 
@@ -104,6 +156,9 @@ switch (cmd) {
     break
   case 'fetch_users':
     fetchUsers(process.argv[3])
+    break
+  case 'crawl':
+    crawl(process.argv[3], process.argv[4])
     break
   default:
     console.log('Task not found')
