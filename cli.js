@@ -65,9 +65,6 @@ const fetchMessages = async (token, channelId, count) => {
   process.exit()
 }
 
-// TODO:
-// - Clear DB
-// - Pagination and get all messages
 const fetchUsers = async token => {
   if (!token) return handleError('Invalid input')
 

@@ -15,8 +15,8 @@ module.exports = {
       } else {
         data = {
           id: userInfo.id,
-          name: userInfo.real_name,
-          real_name: userInfo.real_name,
+          name: userInfo.profile.real_name,
+          real_name: userInfo.profile.real_name,
           email: userInfo.profile.email,
           avatars: [{
             image_24: userInfo.profile.image_24,
