@@ -6,7 +6,10 @@ const MessageSchema = new Schema({
   type: String,
   user: String,
   text: String,
-  edited: String,
+  edited: {
+    user: String,
+    ts: String
+  },
   thread_ts: String,
   parent_user_id: String,
   ts: String,
@@ -21,5 +24,8 @@ const MessageSchema = new Schema({
   }],
   reply_count: Number
 })
+
+MessageSchema.index({ user: 1, ts: 1 })
+MessageSchema.index({ ts: -1 })
 
 module.exports = mongoose.model('Message', MessageSchema, 'Message')
